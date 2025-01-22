@@ -9,8 +9,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-latest  
     steps:
       - name: Checkout code  
         uses: actions/checkout@v2
@@ -18,15 +17,16 @@ jobs:
       - name: Set up Node.js  
         uses: actions/setup-node@v2  
         with:
-          node-version: '14'
+          node-version: '14' # Укажите нужную версию Node.js
 
-      - name: Install dependencies  
-        run: npm install
-
-      - name: Build  
-        run: npm run build
-
-      - name: Deploy to GitHub Pages  
-        uses: peaceiris/actions-gh-pages@v3  
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and Deploy  
+        run: |
+          mkdir output  
+          cp index.html output/
+          cd output  
+          git init  
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" master:gh-pages
